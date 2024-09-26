@@ -1,66 +1,45 @@
-import React, { Component } from 'react'
-import NewsItem from '../NewsItem'
+import React, { useState } from 'react'
+import NewsItem from './NewsItem'
 import { response } from './sampleOutput';
+import CardLoader from './CardLoader';
+import CardGroup from 'react-bootstrap/CardGroup';
+import Pagination from './Pagination';
 
-export class News extends Component {
-    articles = response.articles
-    totalResults = response.totalResults
-    constructor() {
-        super();
-        this.state = {
-            articles: this.articles,
-            totalResults: this.totalResults,
-            page: 123,
-            loading: false
-        }
-    }
+export default function News() {
+    const ALL_ARTICLES = response.articles
+    const totalResults = response.totalResults
+    const lastPage = Math.ceil(totalResults / 8)
 
-    // async componentDidMount() {
-    //     let url = "https://newsapi.org/v2/top-headlines?country=us&page=2&apiKey=37f5493b55484f038769de0a07907088"
-    //     let data = await fetch(url)
-    //     let parsedData=await data.json()
-    //     console.log("data",parsedData)
-    //     this.setState({articles:parsedData.articles})
-    // }
+    const [articles, setArticles] = useState(ALL_ARTICLES.slice(0, 8))
+    const [currentPage, setCurrentPage] = useState(1)
+    // const [loading, setLoading] = useState(false)
+    const loading = false
 
-    handlePrevious=()=> {
-        console.log("previous")
-        this.setState ({
-            articles: this.state.articles,
-            page: this.state.page + 1,
-            totalResults: this.state.totalResults
-        })
-        console.log(this.state.page)
-    }
-
-    handleNext=()=> {
-        console.log("next")
-        this.setState ({
-            articles: this.state.articles,
-            page: this.state.page + 1,
-            totalResults: this.state.totalResults
-        })
-        console.log(this.state.page)
-    }
-
-    render() {
-        return (
-            <div className="container my-3 ">
-                <h2>Top Heading's</h2>
-                <div className='row'>
-                    {this.state.articles.map((element) => {
-                        return <div className='col-md-3' key={element.description}>
+    return (
+        <div className="my-3 mx-3">
+            <h2>Top Heading's</h2>
+            <CardGroup>
+                {loading ? (
+                    Array.from({ length: 8 }).map((_, index) => (
+                        <CardLoader key={index} />
+                    ))
+                ) : (
+                    articles.map((element) => (
+                        <div className='col-md-3' key={element.description}>
                             <NewsItem title={element.title} description={element.description} imageUrl={element.urlToImage} newsImage={element.url} />
                         </div>
-                    })}
-                </div>
-                <div className='container d-flex justify-content-between'>
-                    <button className='btn btn-primary' disabled={this.state.page <= 1} onClick={this.handlePrevious}>{"<< Previous"}</button>
-                    <button className='btn btn-primary' disabled={this.totalResults - (this.state.page * 20) < 20} onClick={this.handleNext}>{"Next >>"}</button>
-                </div>
-            </div>
-        )
-    }
+                    ))
+                )}
+            </CardGroup>
+            <Pagination
+                currentPage={currentPage}
+                lastPage={lastPage}
+                onPageChange={(newPage) => {
+                    var startIndex = (newPage - 1) * 8 //considering pagesize of 8
+                    setCurrentPage(newPage)
+                    setArticles(ALL_ARTICLES.slice(startIndex, startIndex + 8))
+                }}
+            />
+        </div>
+    )
 }
-
-export default News
