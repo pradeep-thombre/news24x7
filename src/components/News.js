@@ -17,7 +17,6 @@ export default function News() {
 
     return (
         <div className="my-3 mx-3">
-            <h2>Top Heading's</h2>
             <CardGroup>
                 {loading ? (
                     Array.from({ length: 8 }).map((_, index) => (

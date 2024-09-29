@@ -6,8 +6,10 @@ import {
     CDBSidebarContent,
     CDBSidebarMenu,
 } from 'cdbreact';
+import Badge from 'react-bootstrap/Badge';
+import { Link } from 'react-router-dom';
 
-export default function Sidebar() {
+export default function Sidebar({loggedIn=false}) {
     return (
         <CDBSidebar toggled className='sidebar bg-body-tertiary text-dark'>
             <CDBSidebarHeader prefix={<i className="fa fa-bars" />}>
@@ -26,14 +28,30 @@ export default function Sidebar() {
                         Care Products
                     </CDBSidebarMenuItem>
                     <CDBSidebarMenuItem icon="gamepad" iconType="solid" textFontSize="14px">
-                        Fun and Games
+                        Fun and Games <Badge bg="primary">New</Badge>
                     </CDBSidebarMenuItem>
                 </CDBSidebarMenu>
                 <CDBSidebarMenu>
-                    <CDBSidebarMenuItem>Grivance</CDBSidebarMenuItem>
-                    <CDBSidebarMenuItem>Careers</CDBSidebarMenuItem>
-                    <CDBSidebarMenuItem>About Us</CDBSidebarMenuItem>
-                    <CDBSidebarMenuItem>Contact Us</CDBSidebarMenuItem>
+                    <CDBSidebarMenuItem>
+                        <Link className='text-dark' to='/employees'>
+                            Our Employees
+                        </Link>
+                    </CDBSidebarMenuItem>
+                    <CDBSidebarMenuItem >
+                        <Link className='text-dark' to='/grivance'>
+                            Grivance
+                        </Link>
+                    </CDBSidebarMenuItem>
+                    <CDBSidebarMenuItem>
+                        <Link className='text-dark' to='/careers'>
+                            Careers
+                        </Link>
+                    </CDBSidebarMenuItem>
+                    <CDBSidebarMenuItem>
+                        <Link className='text-dark' to='/login'>
+                            {loggedIn?'Logout':'Register/Login'}
+                        </Link>
+                    </CDBSidebarMenuItem>
                 </CDBSidebarMenu>
             </CDBSidebarContent>
         </CDBSidebar>
